@@ -129,13 +129,16 @@ export const cancelTransactionHandler = async (req: Request, res: Response) => {
       });
     }
 
-    if (transaction.status !== "pending") {
+    if (transaction.status !== TransactionStatus.Pending) {
       return res.status(400).json({
         error: `Cannot cancel transaction with status '${transaction.status}'`,
       });
     }
 
-    const updatedTransaction = await transactionModel.updateStatus(id, "cancelled" );
+    const updatedTransaction = await transactionModel.updateStatus(
+      id,
+      TransactionStatus.Cancelled,
+    );
 
     console.log("Transaction cancelled", {
       transactionId: id,

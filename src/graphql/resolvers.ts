@@ -8,6 +8,7 @@ import type {
 } from "../models/dispute";
 import type { GraphQLContext } from "./context";
 import { mapTransactionRow, type MappedTransaction } from "./transactionMapper";
+import { TransactionStatus } from "../models/transaction";
 
 const VALID_DISPUTE_STATUSES: DisputeStatus[] = [
   "open",
@@ -236,7 +237,7 @@ export const resolvers = {
               phoneNumber,
               provider,
               stellarAddress,
-              status: "pending",
+              status: TransactionStatus.Pending,
               tags: [],
             });
             const job = await ctx.addTransactionJob({
@@ -293,7 +294,7 @@ export const resolvers = {
           phoneNumber,
           provider,
           stellarAddress,
-          status: "pending",
+          status: TransactionStatus.Pending,
           tags: [],
         });
         const job = await ctx.addTransactionJob({
