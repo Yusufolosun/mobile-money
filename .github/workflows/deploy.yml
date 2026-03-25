@@ -11,7 +11,12 @@ on:
 jobs:
   deploy-staging:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
+    # Only run if CI succeeded, on main branch, and registry credentials are configured
+    if: |
+      github.event.workflow_run.conclusion == 'success' && 
+      github.event.workflow_run.head_branch == 'main' &&
+      secrets.REGISTRY_USERNAME != '' && 
+      secrets.REGISTRY_PASSWORD != ''
     environment: staging
 
     steps:

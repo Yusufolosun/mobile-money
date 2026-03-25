@@ -7,7 +7,10 @@ import { TransactionLimitService } from '../services/transactionLimit/transactio
 import { KYCService } from '../services/kyc/kycService';
 import { addTransactionJob, getJobProgress } from '../queue';
 
+// Initialize services (will be used in future implementations)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const stellarService = new StellarService();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mobileMoneyService = new MobileMoneyService();
 const transactionModel = new TransactionModel();
 const kycService = new KYCService();
@@ -188,11 +191,12 @@ if (transaction.status === TransactionStatus.Pending) {
     });
 
     transaction.status = TransactionStatus.Failed;
-    (transaction as any).reason = "Transaction timeout";
+    (transaction as { reason?: string }).reason = "Transaction timeout";
   }
 }
     res.json({ ...transaction, jobProgress });
-  } catch (error) {
+  } catch (err) {
+    console.error('Failed to fetch transaction:', err);
     res.status(500).json({ error: "Failed to fetch transaction" });
   }
 };
@@ -251,7 +255,8 @@ export const cancelTransactionHandler = async (req: Request, res: Response) => {
       message: "Transaction cancelled successfully",
       transaction: updatedTransaction,
     });
-  } catch (error) {
+  } catch (err) {
+    console.error('Failed to cancel transaction:', err);
     res.status(500).json({
       error: "Failed to cancel transaction",
     });

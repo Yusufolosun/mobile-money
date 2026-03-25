@@ -22,6 +22,7 @@ import {
   pauseQueueEndpoint,
   resumeQueueEndpoint,
 } from "./queue";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { startJobs } from "./jobs/scheduler";
 
 import { register } from "./utils/metrics";

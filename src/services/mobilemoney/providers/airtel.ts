@@ -49,17 +49,19 @@ export class AirtelService {
    * RETRY WRAPPER
    * =========================
    */
-  private async withRetry(fn: () => Promise<any>, retries = 3) {
-    let lastError;
+  private async withRetry<T>(fn: () => Promise<T>, retries = 3): Promise<T> {
+    let lastError: Error | undefined;
 
     for (let i = 0; i < retries; i++) {
       try {
         return await fn();
-      } catch (err: any) {
-        lastError = err;
+      } catch (err) {
+        lastError = err as Error;
 
         // Retry only for transient errors
-        if (err.response?.status >= 500 || err.code === "ECONNABORTED") {
+        if ((err as { response?: { status?: number } }).response?.status && 
+            (err as { response: { status: number } }).response.status >= 500 || 
+            (err as { code?: string }).code === "ECONNABORTED") {
           console.warn(`Retrying Airtel request (${i + 1})`);
           await new Promise((res) => setTimeout(res, 1000 * (i + 1)));
           continue;
