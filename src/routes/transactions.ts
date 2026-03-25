@@ -11,25 +11,22 @@ import { TimeoutPresets, haltOnTimedout } from "../middleware/timeout";
 
 export const transactionRoutes = Router();
 
-// Deposit route
 transactionRoutes.post(
   "/deposit",
   TimeoutPresets.long,
   haltOnTimedout,
   validateTransaction,
-  depositHandler
+  depositHandler,
 );
 
-// Withdraw route
 transactionRoutes.post(
   "/withdraw",
   TimeoutPresets.long,
   haltOnTimedout,
   validateTransaction,
-  withdrawHandler
+  withdrawHandler,
 );
 
-// Quick read operation
 transactionRoutes.get(
   "/:id",
   TimeoutPresets.quick,
@@ -37,7 +34,6 @@ transactionRoutes.get(
   getTransactionHandler,
 );
 
-// Notes and search
 transactionRoutes.patch(
   "/:id/notes",
   TimeoutPresets.quick,
