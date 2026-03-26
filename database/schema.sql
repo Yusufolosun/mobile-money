@@ -42,6 +42,7 @@ CREATE INDEX IF NOT EXISTS idx_transactions_status ON transactions(status);
 CREATE INDEX IF NOT EXISTS idx_transactions_stellar_address ON transactions(stellar_address);
 CREATE INDEX IF NOT EXISTS idx_transactions_created_at ON transactions(created_at);
 CREATE INDEX IF NOT EXISTS idx_transactions_reference_number ON transactions(reference_number);
+CREATE INDEX IF NOT EXISTS idx_transactions_phone_number ON transactions(phone_number);
 
 -- Tags: array of short lowercase strings for categorization (e.g. "refund", "priority", "verified")
 ALTER TABLE transactions ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
@@ -54,68 +55,19 @@ ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES users(id);
 CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON transactions(user_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_user_created ON transactions(user_id, created_at);
 
--- RBAC Tables
--- Roles table
-CREATE TABLE IF NOT EXISTS roles (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(50) UNIQUE NOT NULL,
-  description TEXT,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS webhook_delivery_status VARCHAR(20) NOT NULL DEFAULT 'pending'
+CHECK (webhook_delivery_status IN ('pending', 'delivered', 'failed', 'skipped'));
 
--- Permissions table
-CREATE TABLE IF NOT EXISTS permissions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name VARCHAR(50) UNIQUE NOT NULL,
-  description TEXT,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+-- Metadata: arbitrary JSON key-value data attached to a transaction
+ALTER TABLE transactions ADD COLUMN IF NOT EXISTS metadata JSONB DEFAULT '{}';
+CREATE INDEX IF NOT EXISTS idx_transactions_metadata ON transactions USING GIN (metadata);
 
--- Role permissions junction table
-CREATE TABLE IF NOT EXISTS role_permissions (
-  role_id UUID REFERENCES roles(id) ON DELETE CASCADE,
-  permission_id UUID REFERENCES permissions(id) ON DELETE CASCADE,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (role_id, permission_id)
-);
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS webhook_last_attempt_at TIMESTAMP;
 
--- Add role_id to users table
-ALTER TABLE users 
-ADD COLUMN IF NOT EXISTS role_id UUID REFERENCES roles(id);
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS webhook_delivered_at TIMESTAMP;
 
--- Create indexes for RBAC tables
-CREATE INDEX IF NOT EXISTS idx_roles_name ON roles(name);
-CREATE INDEX IF NOT EXISTS idx_permissions_name ON permissions(name);
-CREATE INDEX IF NOT EXISTS idx_role_permissions_role_id ON role_permissions(role_id);
-CREATE INDEX IF NOT EXISTS idx_role_permissions_permission_id ON role_permissions(permission_id);
-CREATE INDEX IF NOT EXISTS idx_users_role_id ON users(role_id);
-
--- Auto-update updated_at for roles
-CREATE OR REPLACE FUNCTION update_roles_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = CURRENT_TIMESTAMP;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS roles_updated_at ON roles;
-CREATE TRIGGER roles_updated_at
-  BEFORE UPDATE ON roles
-  FOR EACH ROW EXECUTE FUNCTION update_roles_updated_at();
-
--- Auto-update updated_at for permissions
-CREATE OR REPLACE FUNCTION update_permissions_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = CURRENT_TIMESTAMP;
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS permissions_updated_at ON permissions;
-CREATE TRIGGER permissions_updated_at
-  BEFORE UPDATE ON permissions
-  FOR EACH ROW EXECUTE FUNCTION update_permissions_updated_at();
+ALTER TABLE transactions
+ADD COLUMN IF NOT EXISTS webhook_last_error TEXT;

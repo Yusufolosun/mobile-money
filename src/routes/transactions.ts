@@ -1,64 +1,71 @@
 import { Router } from "express";
 import {
-  depositHandler,
-  withdrawHandler,
-  getTransactionHandler,
   cancelTransactionHandler,
-  validateTransaction,
-  getTransactionHistoryHandler, // Added for pagination/filtering
-  updateNotesHandler,
+  depositHandler,
+  getTransactionHandler,
+  getTransactionHistoryHandler,
   searchTransactionsHandler,
-  validateTransaction,
+  updateNotesHandler,
+  withdrawHandler,
+  updateMetadataHandler,
+  patchMetadataHandler,
+  deleteMetadataKeysHandler,
+  searchByMetadataHandler,
 } from "../controllers/transactionController";
+import { validateTransaction } from "../middleware/validateTransaction";
 import { TimeoutPresets, haltOnTimedout } from "../middleware/timeout";
 import { authenticateToken } from "../middleware/auth";
 import { validateTransaction } from "../middleware/validateTransaction";
 
-import { validateTransaction } from "../controllers/transactionController";
-
 export const transactionRoutes = Router();
 
-// --- Transaction History (New) ---
-// GET /api/transactions
 transactionRoutes.get(
   "/",
   TimeoutPresets.quick,
   haltOnTimedout,
-  getTransactionHistoryHandler
+  getTransactionHistoryHandler,
 );
 
-// Deposit route
+transactionRoutes.get(
+  "/search",
+  TimeoutPresets.quick,
+  haltOnTimedout,
+  searchTransactionsHandler,
+);
+
 transactionRoutes.post(
   "/deposit",
   authenticateToken,
   TimeoutPresets.long,
   haltOnTimedout,
   validateTransaction,
-  depositHandler,
+  depositHandler
 );
 
-// Withdraw route
 transactionRoutes.post(
   "/withdraw",
   authenticateToken,
   TimeoutPresets.long,
   haltOnTimedout,
   validateTransaction,
-  withdrawHandler,
+  withdrawHandler
 );
 
-// Get single transaction
-transactionRoutes.get("/:id", TimeoutPresets.quick, haltOnTimedout, getTransactionHandler);
-// Quick read operation
 transactionRoutes.get(
   "/:id",
   authenticateToken,
   TimeoutPresets.quick,
   haltOnTimedout,
-  getTransactionHandler,
+  getTransactionHandler
 );
 
-// Notes and search
+transactionRoutes.post(
+  "/:id/cancel",
+  TimeoutPresets.quick,
+  haltOnTimedout,
+  cancelTransactionHandler,
+);
+
 transactionRoutes.patch(
   "/:id/notes",
   authenticateToken,
@@ -67,10 +74,34 @@ transactionRoutes.patch(
   updateNotesHandler,
 );
 
-transactionRoutes.get(
-  "/search",
-  authenticateToken,
+// Replace metadata
+transactionRoutes.put(
+  "/:id/metadata",
   TimeoutPresets.quick,
   haltOnTimedout,
-  searchTransactionsHandler,
+  updateMetadataHandler,
+);
+
+// Merge metadata keys
+transactionRoutes.patch(
+  "/:id/metadata",
+  TimeoutPresets.quick,
+  haltOnTimedout,
+  patchMetadataHandler,
+);
+
+// Delete metadata keys
+transactionRoutes.delete(
+  "/:id/metadata",
+  TimeoutPresets.quick,
+  haltOnTimedout,
+  deleteMetadataKeysHandler,
+);
+
+// Search by metadata
+transactionRoutes.post(
+  "/search/metadata",
+  TimeoutPresets.quick,
+  haltOnTimedout,
+  searchByMetadataHandler,
 );
