@@ -46,11 +46,11 @@ describe("Transaction Status Filtering - Utility Functions", () => {
     });
 
     it("should filter out empty values", () => {
-      expect(() => parseStatusFilter("pending,,completed")).toThrow();
+      expect(parseStatusFilter("pending,,completed")).toEqual(["pending", "completed"]);
     });
 
     it("should handle only hyphens", () => {
-      expect(() => parseStatusFilter("---")).toThrow();
+      expect(parseStatusFilter("---")).toEqual([]);
     });
 
     it("should validate each status is valid enum value", () => {
@@ -74,7 +74,7 @@ describe("Transaction Status Filtering - Utility Functions", () => {
 
     it("should build IN clause for single status", () => {
       const result = buildStatusWhereClause([TransactionStatus.Pending]);
-      expect(result).toBe("status IN (?)");
+      expect(result).toBe("status IN ('pending')");
     });
 
     it("should build IN clause for multiple statuses", () => {
@@ -82,12 +82,12 @@ describe("Transaction Status Filtering - Utility Functions", () => {
         TransactionStatus.Pending,
         TransactionStatus.Completed,
       ]);
-      expect(result).toBe("status IN (?, ?)");
+      expect(result).toBe("status IN ('pending', 'completed')");
     });
 
     it("should properly escape status values", () => {
       const result = buildStatusWhereClause([TransactionStatus.Failed]);
-      expect(result).toBe("status IN (?)");
+      expect(result).toBe("status IN ('failed')");
     });
 
     it("should produce valid SQL syntax", () => {

@@ -92,7 +92,7 @@ export const validateTransactionFilters = (
         message: "limit must be a number greater than 0",
       });
     }
-    const cappedLimit = Math.min(limitNum, 100);
+    const cappedLimit = Math.min(limitNum, 1000);
 
     // Validate offset
     const offsetNum = parseInt(offset as string, 10);

@@ -666,7 +666,7 @@ export const listTransactionsHandler = async (req: Request, res: Response) => {
         currentPage: Math.floor(filters.offset / filters.limit) + 1,
       },
       filters: {
-        statuses: filters.statuses,
+        statuses: filters.statuses.length > 0 ? filters.statuses : Object.values(TransactionStatus),
       },
     });
   } catch (err) {
