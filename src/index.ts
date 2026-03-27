@@ -27,6 +27,7 @@ import { contactsRoutes } from "./routes/contacts";
 import { reportsRoutes } from "./routes/reports";
 import { createKYCRoutes } from "./routes/kycRoutes";
 import { vaultRoutes } from "./routes/vaults";
+import { createPushRouter } from "./routes/push";
 import { adminRoutes } from "./routes/admin";
 import { errorHandler } from "./middleware/errorHandler";
 import {
