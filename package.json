@@ -22,7 +22,9 @@
     "migrate:create": "tsx src/scripts/migrate.ts create",
     "migrate:status": "tsx src/scripts/migrate.ts status",
     "seed": "tsx src/scripts/seed.ts",
-    "postinstall": "npm run prepare"
+    "postinstall": "npm run prepare",
+    "contracts:build": "cd contracts/escrow && cargo build --target wasm32-unknown-unknown --release",
+    "contracts:test": "cd contracts/escrow && cargo test"
   },
   "lint-staged": {
     "*.{ts,tsx,js,cjs,mjs,json,md,yml,yaml}": "prettier --write"
@@ -36,6 +38,7 @@
     "@bull-board/api": "^6.20.6",
     "@bull-board/express": "^6.20.6",
     "@graphql-tools/schema": "^10.0.31",
+    "@sendgrid/mail": "^8.1.6",
     "@types/speakeasy": "^2.0.10",
     "apollo-server-core": "^3.13.0",
     "apollo-server-express": "^3.13.0",
@@ -63,7 +66,6 @@
     "multer": "^2.1.1",
     "node-cache": "^5.1.2",
     "node-cron": "^3.0.3",
-    "nodemailer": "^8.0.4",
     "pg": "^8.11.3",
     "pg-query-stream": "^4.10.3",
     "prom-client": "^15.1.3",
