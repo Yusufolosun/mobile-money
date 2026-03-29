@@ -970,70 +970,10 @@
   dependencies:
     "@bull-board/api" "6.20.6"
 
-"@datadog/flagging-core@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@datadog/flagging-core/-/flagging-core-1.1.0.tgz"
-  integrity sha512-m2BSEmdSd4P5c/l+4C2L32vnnhwr0bF3qnM2Uz0NhWbUxX4SjpUHbb7GPq8bjr0rfZJZefQ7zQjN/cjE+bb7pg==
-  dependencies:
-    spark-md5 "^3.0.2"
-
-"@datadog/libdatadog@0.9.2":
-  version "0.9.2"
-  resolved "https://registry.npmjs.org/@datadog/libdatadog/-/libdatadog-0.9.2.tgz"
-  integrity sha512-grOerTYuU3wHuFIOBGg3jB144A3KEthEdVEL3meeiXYo7E7fBXXGRgAOwVE42VXFXfl0r8kDKCL7KupBc511tg==
-
-"@datadog/native-appsec@11.0.1":
-  version "11.0.1"
-  resolved "https://registry.npmjs.org/@datadog/native-appsec/-/native-appsec-11.0.1.tgz"
-  integrity sha512-Y/XfknUmmJcw4hhQVhqzgdQvfjy+EGmXuUBgtVkI1r+/qS00egYu+wD/x7pOvjdbZNqN96znVszAnXvDQAzMDQ==
-  dependencies:
-    node-gyp-build "^3.9.0"
-
-"@datadog/native-iast-taint-tracking@4.1.0":
-  version "4.1.0"
-  resolved "https://registry.npmjs.org/@datadog/native-iast-taint-tracking/-/native-iast-taint-tracking-4.1.0.tgz"
-  integrity sha512-g9K9Ddx1YQfrQIC2hgtfnYUGuzAFvSvhvt2lPZOAWBPo+bkYoW5KEkMHoY5XykCigTfXBYcQicRV0xB22AMkHw==
-  dependencies:
-    node-gyp-build "^3.9.0"
-
-"@datadog/native-metrics@3.1.1":
-  version "3.1.1"
-  resolved "https://registry.npmjs.org/@datadog/native-metrics/-/native-metrics-3.1.1.tgz"
-  integrity sha512-MU1gHrolwryrU4X9g+fylA1KPH3S46oqJPEtVyrO+3Kh29z80fegmtyrU22bNt8LigPUK/EdPCnSbMe88QbnxQ==
-  dependencies:
-    node-addon-api "^6.1.0"
-    node-gyp-build "^3.9.0"
-
-"@datadog/openfeature-node-server@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@datadog/openfeature-node-server/-/openfeature-node-server-1.1.0.tgz"
-  integrity sha512-Qy5sz6vGq3KekoRLw9zko7LsDd97MPjJSnYl7jUq7bMST5p0aFFh/MnILn9/B1UC7RZJ6Kj5F2U0hxqmAWz2dw==
-  dependencies:
-    "@datadog/flagging-core" "1.1.0"
-
-"@datadog/pprof@5.14.0":
-  version "5.14.0"
-  resolved "https://registry.npmjs.org/@datadog/pprof/-/pprof-5.14.0.tgz"
-  integrity sha512-bXYptMf0BY3NdKcAmX5aAOnozj7GFdNYE4SIdPF0/Q/Yfb2fYBIYZaN/Le6BhiDIepBvvH/H75d3EIFhB64kOw==
-  dependencies:
-    node-gyp-build "<4.0"
-    pprof-format "^2.2.1"
-    source-map "^0.7.4"
-
-"@datadog/wasm-js-rewriter@5.0.1":
-  version "5.0.1"
-  resolved "https://registry.npmjs.org/@datadog/wasm-js-rewriter/-/wasm-js-rewriter-5.0.1.tgz"
-  integrity sha512-EzbV3Lrdt3udQEsbDOVC5gB1y7yxfpBbrSIk4jaEsGjyj0Dbv2HGj7tZjs+qXzIzNonHc8h5El2bYZOGfC2wwg==
-  dependencies:
-    js-yaml "^4.1.0"
-    lru-cache "^7.14.0"
-    module-details-from-path "^1.0.3"
-    node-gyp-build "^4.5.0"
-
-"@esbuild/darwin-arm64@0.27.4":
+"@esbuild/linux-x64@0.27.4":
   version "0.27.4"
-  resolved "https://registry.npmjs.org/@esbuild/darwin-arm64/-/darwin-arm64-0.27.4.tgz"
-  integrity sha512-b7xaGIwdJlht8ZFCvMkpDN6uiSmnxxK56N2GDTMYPr2/gzvfdQN8rTfBsvVKmIVY/X7EM+/hJKEIbbHs9oA4tQ==
+  resolved "https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.27.4.tgz"
+  integrity sha512-S5qOXrKV8BQEzJPVxAwnryi2+Iq5pB40gTEIT69BQONqR7JH1EPIcQ/Uiv9mCnn05jff9umq/5nqzxlqTOg9NA==
 
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.9.1":
   version "4.9.1"
@@ -1437,10 +1377,10 @@
   resolved "https://registry.npmjs.org/@js-sdsl/ordered-map/-/ordered-map-4.4.2.tgz"
   integrity sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==
 
-"@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3":
+"@msgpackr-extract/msgpackr-extract-linux-x64@3.0.3":
   version "3.0.3"
-  resolved "https://registry.npmjs.org/@msgpackr-extract/msgpackr-extract-darwin-arm64/-/msgpackr-extract-darwin-arm64-3.0.3.tgz"
-  integrity sha512-QZHtlVgbAdy2zAqNA9Gu1UpIuI8Xvsd1v8ic6B2pZmeFnFcMWiPLfWXh7TVw4eGEZ/C9TH281KwhVoeQUKbyjw==
+  resolved "https://registry.npmjs.org/@msgpackr-extract/msgpackr-extract-linux-x64/-/msgpackr-extract-linux-x64-3.0.3.tgz"
+  integrity sha512-cvwNfbP07pKUfq1uH+S6KJ7dT9K8WOE4ZiAcsrSes+UY55E/0jLYc+vq+DO7jlmqRb5zAggExKm0H7O/CBaesg==
 
 "@noble/hashes@^1.1.5":
   version "1.8.0"
