@@ -11,8 +11,7 @@ import { MonitoringService } from "../services/monitoringService";
 import { createPagerDutyService } from "../services/pagerDutyService";
 import { runProviderBalanceAlertJob } from "./balances";
 import { runProviderHealthCheckJob } from "./providerHealthCheck";
-import { runAccountingWebhookJob } from "./accountingWebhookJob";
-import { runLpRebalanceJob } from "./lpRebalanceJob";
+import { runKycTierUpgradeJob } from "./kycTierUpgradeJob";
 
 interface JobConfig {
   name: string;
@@ -76,16 +75,10 @@ const JOBS: JobConfig[] = [
     handler: runProviderHealthCheckJob,
   },
   {
-    name: "accounting-webhook",
-    // Every minute - syncs completed transactions to QuickBooks / Xero
-    schedule: process.env.ACCOUNTING_WEBHOOK_CRON || "* * * * *",
-    handler: runAccountingWebhookJob,
-  },
-  {
-    name: "lp-rebalance",
-    // Every 5 minutes - rebalances distribution account reserves via Stellar LPs
-    schedule: process.env.LP_REBALANCE_CRON || "*/5 * * * *",
-    handler: runLpRebalanceJob,
+    name: "kyc-tier-upgrade",
+    // Every hour - flags users at 80% of their KYC daily limit and notifies them
+    schedule: process.env.KYC_TIER_UPGRADE_CRON || "0 * * * *",
+    handler: runKycTierUpgradeJob,
   },
 ];
 
