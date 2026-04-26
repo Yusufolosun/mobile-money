@@ -1,6 +1,9 @@
 // Initialize centralized configuration first
 import './config/init';
 
+// Extend Zod with .openapi() — must run before any Zod schema is imported.
+import './openapi/registry';
+
 import "./tracer";
 import path from "path";
 import express, { NextFunction, Request, Response } from "express";
@@ -66,10 +69,12 @@ import {
 import { requireAuth } from "./middleware/auth";
 import { responseTime } from "./middleware/responseTime";
 import { requestId } from "./middleware/requestId";
+import { readReplicaRoutingMiddleware } from "./middleware/readReplicaRouting";
 import { i18nMiddleware } from "./utils/i18n";
 import { metricsMiddleware } from "./middleware/metrics";
 import { validateStellarNetwork, logStellarNetwork } from "./config/stellar";
 import { sessionAnomalyLogger } from "./services/logger";
+import logger from "./utils/logger";
 import { HealthCheckResponse, ReadinessCheckResponse } from "./types/api";
 import { privacyRoutes } from "./routes/privacy";
 import { developerDashboardRoutes } from "./routes/developerDashboard";
@@ -84,6 +89,7 @@ import tomlRouter from "./routes/toml";
 import feesRouter from "./routes/fees";
 import feeStrategiesRouter from "./routes/feeStrategies";
 import crossChainRouter from "./routes/crossChain";
+import { docsRouter } from "./routes/docs";
 
 // 1. Import Sentry Middleware
 import { initSentry, sentryBreadcrumbMiddleware } from "./middleware/sentry";
@@ -164,6 +170,7 @@ app.use(
 // app.use(rateLimitMiddleware);
 app.use(responseTime);
 app.use(requestId);
+app.use(readReplicaRoutingMiddleware);
 app.use(i18nMiddleware);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -386,6 +393,9 @@ app.use("/sep38", sep38Router);
 app.use("/sep12", createSep12Router(pool));
 app.use("/.well-known/stellar.toml", tomlRouter);
 
+// API documentation — development only (404 in production)
+app.use("/docs", docsRouter);
+
 // Prometheus Metrics Scraper Endpoint
 app.get("/metrics", async (req: Request, res: Response) => {
   try {
@@ -574,15 +584,15 @@ async function initializeRuntime(): Promise<void> {
     server = http2Server as unknown as Server;
   } else {
     server = app.listen(PORT, () =>
-      console.log(`HTTP/1.1 server running on http://localhost:${PORT}`),
+      logger.info(`HTTP/1.1 server running on http://localhost:${PORT}`),
     );
 
     wsManager = new WebSocketManager(server);
-    console.log("WebSocket server attached");
+    logger.info("WebSocket server attached");
 
     // Start Apollo Server with APQ enabled (must run after HTTP server is created)
     await startApolloServer(app, server);
-    console.log("Apollo GraphQL server started at /graphql");
+    logger.info("Apollo GraphQL server started at /graphql");
   }
 }
 
